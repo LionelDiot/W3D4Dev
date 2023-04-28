@@ -1,4 +1,4 @@
-import { api_key } from "./api_key.js";
+api_key = "cfaa827e"
 
 const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("search-input");
@@ -30,15 +30,19 @@ function lazyLoadImages() {
 
 searchForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const searchQuery = searchInput.value;
+  const searchQuery = searchInput.value.trim();
+  if (searchQuery.length < 3) {
+    resultDiv.innerHTML = "<p>Entrez une recherche d'au moins 3 charactères s'il vous plait</p>";
+    return;
+  }
   const apiUrl = `https://www.omdbapi.com/?s=${searchQuery}&apikey=${api_key}`;
 
   const response = await fetch(apiUrl);
   const data = await response.json();
-  console.log(data);
+  
 
   const searchResults = data.Search;
-
+  
   let output = "";
 
   searchResults.forEach((movie) => {
@@ -57,12 +61,12 @@ searchForm.addEventListener("submit", async (event) => {
   });
 
   resultDiv.innerHTML = `
-  <div class="row row-cols-1 row-cols-md-3 g-3">
-    ${output}
-  </div>
-`;
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+      ${output}
+    </div>
+    `;
 
-lazyLoadImages();
+  lazyLoadImages();
 
   // Add a modal for showing movie details
   resultDiv.insertAdjacentHTML(
